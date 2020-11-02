@@ -8,10 +8,8 @@ const createStore = () => {
         { email: '' },
         { username: '' },
         { userId: '' },
-        { img: '' },
         { admin: null },
         { timestamp: '' },
-        { bg: '' },
       ],
       isLoggedIn: false,
     }),
@@ -26,11 +24,9 @@ const createStore = () => {
         state.currentuser.email = userdata[0].email
         state.currentuser.username = userdata[0].username
         state.currentuser.userId = userdata[0].userId
-        state.currentuser.img = userdata[0].img
         state.currentuser.admin = userdata[0].admin
         state.currentuser.timestamp = userdata[0].timestamp
         state.currentuser.Gender = userdata[0].Gender
-        state.currentuser.bg = userdata[0].bg
       },
       logingOut: (state) => {
         state.isLoggedIn = false
@@ -40,10 +36,8 @@ const createStore = () => {
           { email: '' },
           { username: '' },
           { userId: '' },
-          { img: '' },
           { admin: null },
           { timestamp: '' },
-          { bg: '' },
         ]
       },
     },

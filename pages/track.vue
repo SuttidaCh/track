@@ -1,104 +1,103 @@
 <template>
-  <v-container>
+  <div>
     <v-form ref="form" v-model="valid" @submit.prevent="search">
-      <h1>Tracking Number</h1>
-      <br />
-      <div class="row md-5">
-        <v-text-field
-          v-model="track"
-          :rules="trackRules"
-          append-icon="mdi-magnify"
-          label="Tracking Number --->  TH ตามด้วยเลข10หลัก"
-          class="ma-3"
-          solo
-          required
-        ></v-text-field>
-      </div>
-      <div class="text-center">
-        <v-dialog v-model="dialog" persistent max-width="500">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              :disabled="!valid"
-              color="#7B7D7D"
-              v-bind="attrs"
-              class="mr-2"
-              :search="search"
-              @click="search"
-              v-on="on"
-            >
-              search
-            </v-btn>
-          </template>
-          <v-card>
-            <v-card-title class="headline"> สถานะพัสดุ </v-card-title>
-            <v-card-text
-              ><v-stepper v-model="e13" vertical :search="search">
-                <v-stepper-step step="1" complete>
-                  พัสดุเข้าสู่ระบบ
-                </v-stepper-step>
-                <v-stepper-content step="1"> </v-stepper-content>
+      <v-card>
+        <v-card-title>
+          <v-text-field
+            v-model="search"
+            :rules="searchRules"
+            label="Tracking Number --->  TH ตามด้วยเลข10หลัก"
+            append-icon="mdi-magnify"
+            single-line
+            hide-details
+            required
+          ></v-text-field>
+        </v-card-title>
 
-                <v-stepper-step step="1" complete>
-                  พัสดุถึงศูนย์คัดแยกสินค้า
-                </v-stepper-step>
-                <v-stepper-content step="1"> </v-stepper-content>
-
-                <v-stepper-step step="1" complete>
-                  พัสดุออกจากศูนย์คัดแยกสินค้า
-                </v-stepper-step>
-                <v-stepper-content step="2"> </v-stepper-content>
-
-                <v-stepper-step step="1" complete>
-                  พัสดุถึงสาขาปลายทาง
-                </v-stepper-step>
-                <v-stepper-content step="1"> </v-stepper-content>
-
-                <v-stepper-step step="4"> พัสดุกำลังนำส่ง </v-stepper-step>
-
-                <v-stepper-content step="4">
-                  <v-card
-                    color="grey lighten-1"
-                    class="mb-12"
-                    height="200px"
-                  ></v-card>
-                  <v-btn color="primary" @click="e13 = 1"> Continue </v-btn>
-                  <v-btn text> Cancel </v-btn>
-                </v-stepper-content>
-              </v-stepper></v-card-text
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="dialog = false">
-                Close
+        <div class="text-center">
+          <v-dialog v-model="dialog" persistent max-width="600">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                :disabled="!valid"
+                color="#7B7D7D"
+                v-bind="attrs"
+                class="mr-2"
+                :search="getData"
+                @click="getData"
+                v-on="on"
+              >
+                search
               </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </div>
+            </template>
+            <v-card>
+              <v-card-title class="headline"> สถานะพัสดุ </v-card-title>
+
+              <v-card>
+                <v-card-text>
+                  <v-data-table
+                    :headers="headers"
+                    :items="tracklist"
+                    :search="search"
+                    hide-default-footer
+                  >
+                  </v-data-table>
+                </v-card-text>
+              </v-card>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="green darken" text @click="dialog = false">
+                  Close
+                </v-btn>
+              </v-card-actions></v-card
+            >
+          </v-dialog>
+        </div>
+      </v-card>
     </v-form>
-    <br />
-  </v-container>
+  </div>
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import firebase from 'firebase/app'
+import { db } from '~/plugins/firebaseConfig.js'
 export default {
   data() {
     return {
       valid: true,
       dialog: false,
-      e13: 2,
-      track: '',
-      trackRules: [
+      search: '',
+      searchRules: [
         (v) => !!v || 'Tracking is required',
         (v) =>
           (v && v.length >= 12 && v.length <= 12) ||
           'Tracking must be less than 12 characters',
       ],
+      tracklist: [],
+      headers: [
+        { text: 'หมายเลขติดตามพัสดุ', value: 'track' },
+        { text: 'ชื่อ-สกุล', value: 're_name' },
+        { text: 'สถานะการจัดส่ง', value: 'status' },
+      ],
     }
   },
+  created() {
+    this.getData()
+  },
   methods: {
-    search() {
-      alert('ไม่พบข้อมูล')
+    Submit() {
+      this.$refs.form.Submit()
+    },
+    getData() {
+      db.collection('Recipient')
+        .orderBy('timestamp')
+        .onSnapshot((querySnapshot) => {
+          const data = []
+          querySnapshot.forEach((doc) => {
+            data.push(doc.data())
+          })
+          this.tracklist = data
+        })
     },
   },
 }

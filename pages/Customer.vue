@@ -17,6 +17,7 @@
             <v-text-field
               v-model="phone"
               :rules="phoneRules"
+              type="phone"
               label="เบอร์โทร"
               class="ma-3"
               required
@@ -94,6 +95,15 @@
                 required
               ></v-select>
             </v-col>
+            <v-col cols="12" md="4">
+              <v-text-field
+                v-model="cost"
+                label="ราคา"
+                :rules="costsRules"
+                type="number"
+                required
+              ></v-text-field>
+            </v-col>
 
             <div class="row md-4">
               <v-menu
@@ -127,11 +137,15 @@
             </div>
           </v-row>
           <div>{{ track }}</div>
+          <div>{{ Receiptnum }}</div>
           <br /><v-btn color="#F4D03F" class="mr-4" @click="reset">
             Reset Form
           </v-btn>
           <v-btn :disabled="!valid" class="mr-4" @click="Gennumber">
-            generate number
+            Generate number
+          </v-btn>
+          <v-btn class="mr-4" @click="GennumberRe">
+            Generate Receipt number
           </v-btn>
           <v-dialog v-model="dialog" persistent max-width="290">
             <template v-slot:activator="{ on, attrs }">
@@ -7629,11 +7643,15 @@ export default {
       dateRules: [(v) => !!v || 'Date is required'],
       menu: false,
       sizebox: null,
-      size: ['S', 'M', 'L', 'XL'],
+      size: ['S - 30', 'M - 45', 'L - 65', 'XL - 90'],
       value: '',
       dialog: false,
       track: '',
       status: ['พัสดุเข้าสู่ระบบ'],
+      Receiptnum: '',
+      cost: '',
+      costsRules: [(v) => !!v || 'Cost is required'],
+      sum: 0,
     }
   },
   methods: {
@@ -7657,8 +7675,11 @@ export default {
             this.re_exstates = firebaseData.re_exstates
             this.date = firebaseData.date
             this.sizebox = firebaseData.sizebox
+            this.cost = firebaseData.cost
             this.track = firebaseData.track
             this.status = firebaseData.status
+            this.Receiptnum = firebaseData.Receiptnum
+            this.sum = firebaseData.sum
           }
         })
     },
@@ -7689,6 +7710,7 @@ export default {
 
       // เก็บข้อมูล Input Text ใน collection Sender (มีหลาย document ข้อมูลจะเพิ่มขึ้นเรื่อย ๆ )แสดงผลออกมาที่ด้านนนอก
       const dataText = {
+        Receiptnum: this.Receiptnum,
         name: this.name,
         phone: this.phone,
         address: this.address,
@@ -7696,6 +7718,7 @@ export default {
         sizebox: this.sizebox,
         date: this.date,
         track: this.track,
+        cost: this.cost,
         status: this.status,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       }
@@ -7706,6 +7729,12 @@ export default {
           console.log('Document successfully written! -> Sender')
         })
     },
+    computed: {
+      result() {
+        const sum = this.cost + this.cost
+        return sum
+      },
+    },
     Submit() {
       this.$refs.form.Submit()
     },
@@ -7715,6 +7744,10 @@ export default {
     Gennumber() {
       const track = 'TH' + Math.floor(Math.random() * 10000000000)
       this.track = track
+    },
+    GennumberRe() {
+      const Receiptnum = 'B' + Math.floor(Math.random() * 1000000000000)
+      this.Receiptnum = Receiptnum
     },
   },
 }

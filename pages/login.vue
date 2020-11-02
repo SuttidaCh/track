@@ -1,55 +1,57 @@
 <template>
-  <div>
-    <v-container>
-      <v-row justify="center">
-        <v-col cols="11" sm="6" md="4">
-          <v-card min-height="400" elevation="0" class="grey">
-            <v-toolbar flat height="200" color="grey"> </v-toolbar>
-            <v-card-text>
+  <v-container>
+    <v-row justify="center"
+      ><v-col md="8">
+        <v-card>
+          <div class="text-center">
+            <br />
+            <h1>Login</h1>
+          </div>
+          <v-card-text>
+            <v-container>
               <v-form ref="form" v-model="valid">
                 <v-row>
-                  <v-col>
+                  <v-col cols="12">
                     <v-text-field
                       v-model="email"
                       :rules="emailRules"
                       label="E-mail"
-                      class="mx-4 grey"
                       required
-                      solo
-                      value
-                      autofocus
                     ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
                     <v-text-field
                       v-model="password"
-                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                      :rules="passwordRules"
-                      :type="show1 ? 'text' : 'password'"
+                      :rules="passRules"
                       label="Password"
-                      class="mx-4 grey"
-                      solo
                       required
-                      @click:append="show1 = !show1"
-                    >
-                    </v-text-field>
-                    <v-row justify="center">
-                      <v-btn :disabled="!valid" @click="login">Login</v-btn>
-                    </v-row>
-                    <div v-if="error" class="alert alert-danger">
-                      {{ error }}
-                    </div>
-                    <br />
-                    <v-row justify="center">
-                      <nuxt-link :to="{ name: 'register' }"> </nuxt-link>
-                    </v-row>
+                      :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                      :type="show ? 'text' : 'password'"
+                      @click:append="show = !show"
+                    ></v-text-field>
                   </v-col>
                 </v-row>
               </v-form>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-  </div>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="dialog = false">
+              Close
+            </v-btn>
+            <v-btn
+              :disabled="!valid"
+              color="blue darken-1"
+              text
+              @click="login(), (dialog = false)"
+            >
+              Login
+            </v-btn>
+          </v-card-actions>
+        </v-card></v-col
+      ></v-row
+    >
+  </v-container>
 </template>
 <script>
 import firebase from 'firebase/app'
@@ -59,6 +61,7 @@ import { db, auth } from '~/plugins/firebaseConfig.js'
 export default {
   data() {
     return {
+      show: false,
       valid: false,
       email: '',
       password: '',
@@ -100,6 +103,7 @@ export default {
         })
         .catch((err) => {
           this.error = err.message
+          alert('ไม่พบข้อมูล')
         })
     },
   },

@@ -51,10 +51,62 @@
       </v-list>
     </v-navigation-drawer>
     <!--แถบบนมือถือ-->
+    <v-app-bar :clipped-left="clipped" fixed app>
+      <v-btn text @click.stop="drawer = !drawer"
+        ><v-toolbar-title v-text="title"
+      /></v-btn>
+      <v-row justify="end">
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn dark v-bind="attrs" v-on="on">
+              <v-icon>mdi-menu</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <!--login-->
+            <v-list v-if="this.$store.state.isLoggedIn == true">
+              <v-list nav dense>
+                <v-list-item link nuxt to="/">
+                  <v-list-item-icon>
+                    <v-icon>mdi-qrcode-scan</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>Home</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-list>
+            <!--notlogin-->
+            <v-list v-else>
+              <v-list nav dense>
+                <v-list-item link nuxt to="/track">
+                  <v-list-item-icon>
+                    <v-icon>mdi-qrcode-scan</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>track</v-list-item-title>
+                </v-list-item>
+                <v-list-item link nuxt to="/login">
+                  <v-list-item-icon>
+                    <v-icon>mdi-login</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>Login</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-list>
+          </v-list>
+        </v-menu>
+      </v-row>
+    </v-app-bar>
     <!--แถบบนคอม-->
-    <v-app-bar :clipped-left="clipped" fixed app color="#7B7D7D">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title v-text="title" />
+    <v-app-bar
+      :clipped-left="clipped"
+      fixed
+      app
+      color="#7B7D7D"
+      class="hidden-sm-and-down"
+    >
+      <v-btn text @click.stop="drawer = !drawer"
+        ><v-toolbar-title v-text="title"
+      /></v-btn>
+      <v-spacer />
       <v-spacer />
       <!--login-->
       <div
@@ -123,7 +175,6 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-btn color="#F4D03F" nuxt to="/Register">Register</v-btn>
       </div>
     </v-app-bar>
     <v-main>
@@ -223,6 +274,7 @@ export default {
         })
         .catch((err) => {
           this.error = err.message
+          alert('ไม่พบข้อมูล')
         })
     },
     checkuser() {
@@ -249,8 +301,8 @@ export default {
       auth
         .signOut()
         .then(() => {
-          this.$router.replace('/')
           console.log('ออกจากระบบแล้ว')
+          this.$router.replace('/')
         })
         .catch(function (error) {})
     },

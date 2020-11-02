@@ -13,7 +13,8 @@
     </v-card-title>
 
     <v-data-table :headers="headers" :items="textList" :search="search">
-      ></v-data-table
+      >
+      <h1>{{ result }}</h1></v-data-table
     >
   </v-card>
 </template>
@@ -24,16 +25,24 @@ import { db } from '~/plugins/firebaseConfig.js'
 export default {
   data() {
     return {
+      cost: '',
+      sum: 0,
       search: '',
       headers: [
-        { text: 'เลขที่ใบเสร็จ', value: 'receipt' },
+        { text: 'เลขที่ใบเสร็จ', value: 'Receiptnum' },
         { text: 'ชื่อ-สกุล', value: 'name' },
         { text: 'วันที่ทำรายการ', value: 'date' },
-        { text: 'จำนวนเงินทั้งหมด', value: 'total' },
-        { text: 'ยอดการบริการ', value: 'service' },
+        { text: 'จำนวนเงินทั้งหมด', value: 'cost' },
+        { text: 'ผลรวม', value: 'sum' },
       ],
       textList: [],
     }
+  },
+  computed: {
+    result() {
+      const sum = this.cost + this.cost
+      return sum
+    },
   },
   created() {
     this.getData()

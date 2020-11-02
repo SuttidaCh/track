@@ -32,7 +32,7 @@ export default {
         { text: 'ตำบล/อำเภอ/จังหวัด/รหัสไปรษณีย์', value: 'exstates' },
         { text: 'ติดต่อ', value: 'phone' },
         { text: 'วันที่ทำรายการ', value: 'date' },
-        { text: 'รวมเป็นเงิน', value: 'total' },
+        { text: 'รวมเป็นเงิน', value: 'cost' },
       ],
       textList: [],
     }

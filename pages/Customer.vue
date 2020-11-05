@@ -17,7 +17,7 @@
             <v-text-field
               v-model="phone"
               :rules="phoneRules"
-              type="phone"
+              type="number"
               label="เบอร์โทร"
               class="ma-3"
               required
@@ -60,6 +60,7 @@
               :rules="phoneRules"
               label="เบอร์โทร"
               class="ma-3"
+              type="number"
               required
             ></v-text-field>
           </div>
@@ -97,7 +98,7 @@
             </v-col>
             <v-col cols="12" md="4">
               <v-text-field
-                v-model="cost"
+                v-model.number="cost"
                 label="ราคา"
                 :rules="costsRules"
                 type="number"
@@ -139,14 +140,88 @@
           <div>{{ track }}</div>
           <div>{{ Receiptnum }}</div>
           <br /><v-btn color="#F4D03F" class="mr-4" @click="reset">
-            Reset Form
+            Reset
           </v-btn>
-          <v-btn :disabled="!valid" class="mr-4" @click="Gennumber">
-            Generate number
+          <v-btn :disabled="valid" class="mr-4" @click="Gennumber">
+            Tracking
           </v-btn>
-          <v-btn class="mr-4" @click="GennumberRe">
-            Generate Receipt number
+          <v-btn :disabled="!valid" class="mr-4" @click="GennumberRe">
+            Receipt number
           </v-btn>
+          <v-dialog v-model="bill" persistent max-width="510">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                :disabled="!valid"
+                color="#7B7D7D"
+                v-bind="attrs"
+                class="mr-2"
+                :gennumber="getbill"
+                @click="getbill"
+                v-on="on"
+              >
+                Receipt Bill
+              </v-btn>
+            </template>
+
+            <v-card>
+              <br />
+              <template>
+                <v-card-title>
+                  <v-col>
+                    <v-row justify="center">
+                      <v-col cols="2"
+                        ><span class="mdi mdi-truck-fast mdi-48px"></span
+                      ></v-col>
+                      <v-col cols="9">
+                        <h3>Fast Access Transportation</h3>
+                        <h3>Services (FATs)</h3></v-col
+                      >
+                    </v-row>
+                    <v-row justify="center">
+                      <h6>
+                        บริษัท ฟาส แอคเซส แทรนสเพอร์เรชั่น เซอร์วิสซ์ จำกัด
+                      </h6>
+                      <h6>
+                        ห้อง 3203 ชั้น 6 อาคาร 60 ปี มหาวิทยาลัยแม่โจ้ เชียงใหม่
+                        50290
+                      </h6>
+                      <h6>Tel.0123456789</h6>
+                    </v-row>
+                    <hr />
+                    <h6>ผู้ส่ง : {{ name }}</h6>
+                    <hr />
+                    <tr class="d-flex justify-space-between mb-6">
+                      <h6>ผู้รับ : {{ re_name }}</h6>
+                      <h6>{{ track }}</h6>
+                    </tr>
+                    <h6>ปลางทาง : {{ re_address }} {{ re_exstates }}</h6>
+                    <h6 class="d-flex justify-end mb-6">{{ cost }}.00 บาท</h6>
+
+                    <hr />
+                  </v-col>
+                </v-card-title>
+              </template>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  class="center"
+                  color="green darken"
+                  text
+                  @click="bill = false"
+                >
+                  Close
+                </v-btn>
+                <v-btn
+                  class="center"
+                  color="green darken"
+                  text
+                  @click="bill = false"
+                >
+                  Print
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
           <v-dialog v-model="dialog" persistent max-width="290">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -7651,10 +7726,20 @@ export default {
       Receiptnum: '',
       cost: '',
       costsRules: [(v) => !!v || 'Cost is required'],
-      sum: 0,
+      bill: false,
     }
   },
+  created() {
+    this.getbill()
+  },
   methods: {
+    beforeCreate() {
+      if (!firebase.auth().currentUser.uid) {
+        console.log('No Login')
+      } else {
+        console.log('Login ok')
+      }
+    },
     save(date) {
       this.$refs.menu.save(date)
     },
@@ -7679,16 +7764,27 @@ export default {
             this.track = firebaseData.track
             this.status = firebaseData.status
             this.Receiptnum = firebaseData.Receiptnum
-            this.sum = firebaseData.sum
           }
         })
     },
     created() {
       this.getData()
     },
+    getbill() {
+      db.collection('Recipient')
+        .orderBy('timestamp')
+        .onSnapshot((querySnapshot) => {
+          const data = []
+          querySnapshot.forEach((doc) => {
+            data.push(doc.data())
+          })
+          this.tracklist = data
+        })
+    },
     addData() {
       // เก็บข้อมูล Form ใน collection Recipient ( มี 1 document แต่จะ update ข้อมูลเรื่อย ๆ )
       const data = {
+        Receiptnum: this.Receiptnum,
         re_name: this.re_name,
         re_phone: this.re_phone,
         re_exstates: this.re_exstates,

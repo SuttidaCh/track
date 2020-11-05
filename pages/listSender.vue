@@ -41,6 +41,13 @@ export default {
     this.getData()
   },
   methods: {
+    beforeCreate() {
+      if (!firebase.auth().currentUser.uid) {
+        console.log('No Login')
+      } else {
+        console.log('Login ok')
+      }
+    },
     getData() {
       db.collection('Sender')
         .orderBy('timestamp')

@@ -12,10 +12,21 @@
       ></v-text-field>
     </v-card-title>
 
-    <v-data-table :headers="headers" :items="textList" :search="search">
-      >
-      <h1>{{ result }}</h1></v-data-table
+    <v-data-table
+      :headers="headers"
+      :items="textList"
+      :search="search"
+      item-key="cost"
     >
+      <template slot="body.append">
+        <tr>
+          <td class="pink--text">Totals</td>
+          <td></td>
+          <td></td>
+          <td class="pink--text">{{ sumField('cost') }}</td>
+        </tr>
+      </template>
+    </v-data-table>
   </v-card>
 </template>
 
@@ -25,29 +36,28 @@ import { db } from '~/plugins/firebaseConfig.js'
 export default {
   data() {
     return {
-      cost: '',
-      sum: 0,
       search: '',
       headers: [
         { text: 'เลขที่ใบเสร็จ', value: 'Receiptnum' },
         { text: 'ชื่อ-สกุล', value: 'name' },
         { text: 'วันที่ทำรายการ', value: 'date' },
         { text: 'จำนวนเงินทั้งหมด', value: 'cost' },
-        { text: 'ผลรวม', value: 'sum' },
       ],
       textList: [],
     }
   },
-  computed: {
-    result() {
-      const sum = this.cost + this.cost
-      return sum
-    },
-  },
+
   created() {
     this.getData()
   },
   methods: {
+    beforeCreate() {
+      if (!firebase.auth().currentUser.uid) {
+        console.log('No Login')
+      } else {
+        console.log('Login ok')
+      }
+    },
     getData() {
       db.collection('Sender')
         .orderBy('timestamp')
@@ -58,6 +68,10 @@ export default {
           })
           this.textList = data
         })
+    },
+    sumField(key) {
+      // sum data in give key (property)
+      return this.textList.reduce((a, b) => a + b[key], 0)
     },
   },
 }

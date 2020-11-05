@@ -13,12 +13,10 @@
         ><v-list-item>
           <v-list-item-content>
             <v-list-item-title class="title">
-              <v-body>
-                <v-row justify="center">
-                  {{ this.$store.state.currentuser.firstname }}
-                  {{ this.$store.state.currentuser.lastname }}
-                </v-row>
-              </v-body>
+              <v-row justify="center">
+                {{ this.$store.state.currentuser.firstname }}
+                {{ this.$store.state.currentuser.lastname }}
+              </v-row>
             </v-list-item-title>
             <v-list-item-subtitle>
               <v-row justify="center">
@@ -119,62 +117,8 @@
       </div>
       <!--notlogin-->
       <div v-else>
-        <v-dialog v-model="dialog" persistent max-width="500px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn class="ma-1 col-" color="#F4D03F" to="/track">Track</v-btn>
-            <v-btn class="ma-1 col-" color="#C62828" v-bind="attrs" v-on="on">
-              Login
-            </v-btn>
-          </template>
-          <v-card>
-            <div class="text-center">
-              <br />
-              <h1>Login</h1>
-            </div>
-            <v-card-text>
-              <v-container>
-                <v-form ref="form" v-model="valid">
-                  <v-row>
-                    <v-col cols="12" sm="6" md="4"> </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        v-model="email"
-                        :rules="emailRules"
-                        label="E-mail"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        v-model="password"
-                        :rules="passRules"
-                        label="Password"
-                        required
-                        :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
-                        :type="show ? 'text' : 'password'"
-                        @click:append="show = !show"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-form>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="dialog = false">
-                Close
-              </v-btn>
-              <v-btn
-                :disabled="!valid"
-                color="blue darken-1"
-                text
-                @click="login(), (dialog = false)"
-              >
-                Login
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+        <v-btn class="ma-1 col-" color="#F4D03F" to="/track">Track</v-btn>
+        <v-btn class="ma-1 col-" color="#E53935" to="/login">Login</v-btn>
       </div>
     </v-app-bar>
     <v-main>
@@ -233,7 +177,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Fast Tracking Service',
+      title: 'Fast Access Transportation Services (FATs)',
       show: false,
       valid: true,
       email: '',
@@ -304,7 +248,7 @@ export default {
           console.log('ออกจากระบบแล้ว')
           this.$router.replace('/')
         })
-        .catch(function (error) {})
+        .catch((error) => {})
     },
     main() {
       this.$router.replace('/')

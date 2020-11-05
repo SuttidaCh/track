@@ -1,21 +1,19 @@
 <template>
   <div>
     <v-row justify="center" align="center">
-      <v-col cols="12" sm="8" md="6">
+      <v-col cols="12" sm="8" md="8">
         <v-col justify="center" align="center">
-          <h1 class="text-uppercase">Fast Tracking Service</h1>
+          <h1 class="text-uppercase">📦Fast Access Transpotation Service 🚚</h1>
         </v-col>
       </v-col>
     </v-row>
     <br />
-    <v-carousel v-model="model" cycle :show-arrows="false">
-      <v-carousel-item v-for="(slide, i) in slides" :key="i">
-        <v-sheet :color="colors[i]" height="100%">
-          <v-row class="fill-height" align="center" justify="center">
-            <div class="display-3">Hello {{ slide }}</div>
-          </v-row>
-        </v-sheet>
-      </v-carousel-item>
+    <v-carousel v-model="model" cycle :show-arrows="false" max-width="50%">
+      <v-carousel-item
+        v-for="(item, i) in items"
+        :key="i"
+        :src="item.src"
+      ></v-carousel-item>
     </v-carousel>
     <div class="container">
       <div class="text-center">
@@ -43,36 +41,18 @@
 export default {
   data() {
     return {
-      colors: [
-        '#FFD54F',
-        '#F8BBD0',
-        '#81C784',
-        '#E59866',
-        '#85C1E9',
-        '#D2B4DE',
-        '#E57373',
-      ],
-      slides: [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday',
-      ],
       items: [
         {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
+          src:
+            'https://i.pinimg.com/originals/37/f9/bc/37f9bc2f39015e5763835515b6b1f683.jpg',
         },
         {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
+          src:
+            'https://i.pinimg.com/originals/b5/36/47/b536479e2f42856050e4291fd27e90b1.jpg',
         },
         {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+          src:
+            'https://i.pinimg.com/originals/30/41/23/304123ca5027f628a3eba6635afd763c.jpg',
         },
       ],
     }

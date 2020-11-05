@@ -48,8 +48,8 @@
                 <v-btn color="green darken" text @click="dialog = false">
                   Close
                 </v-btn>
-              </v-card-actions></v-card
-            >
+              </v-card-actions>
+            </v-card>
           </v-dialog>
         </div>
       </v-card>
@@ -67,6 +67,7 @@ export default {
       valid: true,
       dialog: false,
       search: '',
+      track: [],
       searchRules: [
         (v) => !!v || 'Tracking is required',
         (v) =>

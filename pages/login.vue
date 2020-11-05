@@ -36,9 +36,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog = false">
-              Close
-            </v-btn>
+            <v-btn color="blue darken-1" to="/" @click="dialog"> Close </v-btn>
             <v-btn
               :disabled="!valid"
               color="blue darken-1"
@@ -48,9 +46,9 @@
               Login
             </v-btn>
           </v-card-actions>
-        </v-card></v-col
-      ></v-row
-    >
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script>
@@ -61,6 +59,7 @@ import { db, auth } from '~/plugins/firebaseConfig.js'
 export default {
   data() {
     return {
+      dialog: false,
       show: false,
       valid: false,
       email: '',

@@ -81,23 +81,6 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-              <v-dialog v-model="dialogDelete" max-width="500px">
-                <v-card>
-                  <v-card-title class="headline"
-                    >Are you sure you want to delete this item?</v-card-title
-                  >
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="closeDelete"
-                      >Cancel</v-btn
-                    >
-                    <v-btn color="blue darken-1" text @click="deleteItemConfirm"
-                      >OK</v-btn
-                    >
-                    <v-spacer></v-spacer>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
             </v-toolbar>
           </template>
 
@@ -147,7 +130,6 @@
             <v-icon small class="mr-2" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
           </template>
         </v-data-table>
       </v-form>
@@ -204,9 +186,6 @@ export default {
     dialog(val) {
       val || this.close()
     },
-    dialogDelete(val) {
-      val || this.closeDelete()
-    },
   },
 
   created() {
@@ -234,25 +213,6 @@ export default {
       this.editedItem.track = item.track
       this.dialog = true
     },
-    deleteItem(item) {
-      this.editedIndex = this.textList.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
-    },
-
-    deleteItemConfirm() {
-      this.textList.splice(this.editedIndex, 1)
-      this.closeDelete()
-      db.collection('Recipient')
-        .doc()
-        .delete()
-        .then(function () {
-          console.log('Document successfully deleted!')
-        })
-        .catch(function (error) {
-          console.error('Error removing document: ', error)
-        })
-    },
     close() {
       this.dialog = false
       this.$nextTick(() => {
@@ -260,14 +220,6 @@ export default {
         this.editedIndex = -1
       })
     },
-    closeDelete() {
-      this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
-    },
-
     save() {
       console.log(this.editedItem.track)
       db.collection('Recipient')

@@ -142,7 +142,7 @@
           <br /><v-btn color="#F4D03F" class="mr-4" @click="reset">
             Reset
           </v-btn>
-          <v-btn :disabled="valid" class="mr-4" @click="Gennumber">
+          <v-btn :disabled="!valid" class="mr-4" @click="Gennumber">
             Tracking
           </v-btn>
           <v-btn :disabled="!valid" class="mr-4" @click="GennumberRe">
